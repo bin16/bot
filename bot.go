@@ -1,7 +1,10 @@
 package bot
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
+	"net/http"
 )
 
 type UpdateHandler func(u *Update, b *Bot)
@@ -55,4 +58,25 @@ func (b *Bot) getMe() {
 	u := &User{}
 	b.postJSON(MethodGetMe, nil, u)
 	b.Profile = u
+}
+
+func (b *Bot) SendDocument(d *SendDocumentConfig) (*Message, error) {
+	m1 := &Message{}
+
+	resp, err := http.Post(d.Args(b.token))
+	if err != nil {
+		return m1, err
+	}
+
+	result := &APIResponse{Result: m1}
+	dec := json.NewDecoder(resp.Body)
+	if err := dec.Decode(result); err != nil {
+		return m1, err
+	}
+
+	if !result.OK {
+		return m1, fmt.Errorf(result.Description)
+	}
+
+	return m1, nil
 }

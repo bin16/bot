@@ -8,8 +8,12 @@ import (
 	"net/http"
 )
 
+func getAPI(token, method string) string {
+	return fmt.Sprintf("https://api.telegram.org/bot%s/%s", token, method)
+}
+
 func (b *Bot) getAPI(method string) string {
-	return fmt.Sprintf("https://api.telegram.org/bot%s/%s", b.token, method)
+	return getAPI(b.token, method)
 }
 
 func (b *Bot) getFileURL(filePath string) string {
@@ -45,7 +49,7 @@ func (b *Bot) postJSON(method string, values interface{}, rb interface{}) (*APIR
 	result := &APIResponse{Result: rb}
 	dec := json.NewDecoder(resp.Body)
 	if err := dec.Decode(result); err != nil {
-		return result, nil
+		return result, err
 	}
 
 	return result, nil
