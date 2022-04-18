@@ -23,6 +23,7 @@ type Message struct {
 	Date      int64           `json:"date"`
 	Text      string          `json:"text"`
 	Animation *Animation      `json:"animation"`
+	Document  *Document       `json:"document"`
 	Entities  []MessageEntity `json:"entities"`
 	Sticker   *Sticker        `json:"sticker"`
 }
